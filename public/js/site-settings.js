@@ -338,9 +338,13 @@
                 apply(settings);
                 writeCache(settings);
                 document.dispatchEvent(new CustomEvent('site-settings:loaded', { detail: settings }));
+                if (window.SiteBoot) window.SiteBoot.done('settings');
                 return settings;
             })
-            .catch(function () { return current; });
+            .catch(function () {
+                if (window.SiteBoot) window.SiteBoot.done('settings');
+                return current;
+            });
     }
 
     window.SiteSettings = {
