@@ -281,6 +281,28 @@
         try { recolorInline(map); } catch (e) { /* ignore */ }
     }
 
+    /* Stylesheets can still be loading and carousels/animations clone nodes
+       after the first pass, so repeat it briefly — this is what makes a newly
+       picked colour show up everywhere straight away instead of after reload. */
+    function recolorRepeatedly(theme) {
+        recolor(theme);
+        if (window.requestAnimationFrame) window.requestAnimationFrame(function () { recolor(theme); });
+        [60, 250, 700, 1600].forEach(function (delay) {
+            setTimeout(function () { recolor(current.theme); }, delay);
+        });
+    }
+
+    /* Keep newly inserted markup / stylesheets in the theme colour too. */
+    var observerTimer = null;
+    function watchDom() {
+        if (!window.MutationObserver || watchDom.on) return;
+        watchDom.on = true;
+        new MutationObserver(function () {
+            if (observerTimer) return;
+            observerTimer = setTimeout(function () { observerTimer = null; recolor(current.theme); }, 120);
+        }).observe(document.documentElement, { childList: true, subtree: true, attributeFilter: ['style'] });
+    }
+
     function apply(settings) {
         current = Object.assign({}, DEFAULTS, settings || {});
         styleTag().textContent = css(current);
@@ -291,9 +313,11 @@
             document.documentElement.style.removeProperty('--theme-primary');
             document.documentElement.style.removeProperty('--bs-primary');
         }
-        recolor(current.theme);
         window.SiteSettings.current = current;
+        recolorRepeatedly(current.theme);
+        watchDom();
     }
+
 
 
     var current = Object.assign({}, DEFAULTS);
