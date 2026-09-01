@@ -104,7 +104,7 @@
 
     /* Original brand colours, lowercase hex. */
     var BRAND = ['#083f43', '#0a5a60', '#12787f', '#063033', '#0d6266',
-        '#eef6f6', '#f4fafa', '#e6f2f2', '#083f67', '#4338ca', '#3d3220', '#6b4f1a', '#4d5d5e', '#536365', '#172b4d'];
+        '#eef6f6', '#f4fafa', '#e6f2f2', '#083f67', '#4338ca', '#3d3220', '#6b4f1a', '#4d5d5e', '#536365', '#172b4d', '#dfecea', '#e8ecf7'];
     var BRAND_RGB = [[8, 63, 67], [10, 90, 96], [18, 120, 127], [6, 48, 51]];
 
     function hexToRgb(hex) {
