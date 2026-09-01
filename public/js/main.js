@@ -10,7 +10,6 @@
            the page never flashes unstyled or half-translated content. */
         if (window.SiteBoot && document.documentElement.classList.contains('site-booting')) {
             document.addEventListener('site-boot:revealed', function () { setTimeout(hide, 1); });
-            setTimeout(hide, 3000);
         } else {
             setTimeout(hide, 1);
         }

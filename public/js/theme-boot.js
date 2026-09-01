@@ -76,7 +76,10 @@
 
     window.SiteBoot = { done: done, reveal: reveal, settings: settings };
 
-    /* Safety nets: never leave the page hidden. */
-    setTimeout(reveal, 2500);
-    window.addEventListener('load', function () { setTimeout(reveal, 150); });
+    /* The window load event does not mean remote CMS settings are ready.
+       Revealing there caused first-time visitors (with no local cache) to see
+       the template colours before the saved theme arrived.  Each initializer
+       calls done(), including its failure path, so normally this timer is
+       never used; it only protects against a genuinely stalled request. */
+    setTimeout(reveal, 10000);
 })();
