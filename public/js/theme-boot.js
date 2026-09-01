@@ -48,9 +48,10 @@
         'html.site-booting body > *:not(#spinner){visibility:hidden !important;}',
         'html.site-booting #spinner{opacity:1 !important;}',
         'html.site-booting{background:#fff;}',
-        '@font-face{font-display:swap;}',
-        'body{opacity:1;transition:opacity .18s ease-in;}',
-        'html.site-booting body{opacity:1;}'
+        /* loader dot follows the cached theme colour from the very first frame */
+        '#spinner .spinner-grow,#spinner .spinner-border,#spinner .text-primary' +
+        '{color:var(--theme-primary,#9aa0a6) !important;}',
+        'body{transition:opacity .18s ease-in;}'
     ].join('');
     root.appendChild(style);
 
