@@ -118,6 +118,7 @@
             writeCache(items);
             window.SiteCMS.loaded = true;
             document.dispatchEvent(new CustomEvent('cms:loaded', { detail: data }));
+            if (window.SiteBoot) window.SiteBoot.done('cms');
         };
         if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
         else run();

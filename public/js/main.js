@@ -426,6 +426,10 @@ if (btnLibrary) {
 
     var THEME_COLOR = '#4338CA';
     function applyThemeColor(color) {
+        /* Never override a colour already restored by theme-boot.js / the CMS
+           settings — that is what caused the initial colour flash. */
+        var existing = document.documentElement.style.getPropertyValue('--theme-primary');
+        if (existing && existing.trim()) return;
         document.documentElement.style.setProperty('--theme-primary', color);
         document.documentElement.style.setProperty('--bs-primary', color);
     }
@@ -435,6 +439,7 @@ if (btnLibrary) {
     try { savedLanguage = localStorage.getItem('site-language') || 'en'; } catch (error) { /* use defaults */ }
     applyThemeColor(THEME_COLOR);
     applyLanguage(savedLanguage);
+    if (savedLanguage !== 'bn' && window.SiteBoot) window.SiteBoot.done('lang');
 
     // Full-site Bangla dictionary (pre-translated, served locally).
     fetch('/js/bn-dictionary.json')
@@ -442,6 +447,7 @@ if (btnLibrary) {
         .then(function (data) {
             externalDictionary = data || {};
             if (document.documentElement.lang === 'bn') applyLanguage('bn');
+            if (window.SiteBoot) window.SiteBoot.done('lang');
         })
-        .catch(function () { /* dictionary optional */ });
+        .catch(function () { if (window.SiteBoot) window.SiteBoot.done('lang'); });
 })();
