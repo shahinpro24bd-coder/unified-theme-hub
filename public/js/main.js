@@ -384,15 +384,41 @@ if (btnLibrary) {
     ];
     var originals = new WeakMap();
     var externalDictionary = {};
+    var normalizedDictionary = {};
+    var reverseDictionary = {};
 
-    function translatedText(source) {
+    function normalizeText(value) {
+        return String(value || '').replace(/\s+/g, ' ').trim().toLocaleLowerCase('en');
+    }
+
+    function indexDictionary() {
+        normalizedDictionary = {};
+        reverseDictionary = {};
+        Object.keys(translations).forEach(function (english) {
+            normalizedDictionary[normalizeText(english)] = translations[english];
+            reverseDictionary[normalizeText(translations[english])] = english;
+        });
+        Object.keys(externalDictionary).forEach(function (english) {
+            normalizedDictionary[normalizeText(english)] = externalDictionary[english];
+            reverseDictionary[normalizeText(externalDictionary[english])] = english;
+        });
+    }
+
+    function translatedText(source, language) {
         var trimmed = source.trim();
         if (!trimmed) return source;
-        var translated = externalDictionary[trimmed] || translations[trimmed];
-        if (!translated) {
+        var normalized = normalizeText(trimmed);
+        var translated;
+        if (language === 'en') {
+            translated = reverseDictionary[normalized];
+        } else {
+            translated = externalDictionary[trimmed] || translations[trimmed] || normalizedDictionary[normalized];
+        }
+        if (!translated && language === 'bn') {
             translated = trimmed;
             phraseTranslations.forEach(function (pair) { translated = translated.split(pair[0]).join(pair[1]); });
         }
+        if (!translated) translated = trimmed;
         return source.replace(trimmed, translated);
     }
 
@@ -403,15 +429,15 @@ if (btnLibrary) {
             if (!node.parentElement || node.parentElement.closest('script, style, noscript, .theme-settings')) continue;
             var source = originals.get(node) || node.nodeValue;
             if (!originals.has(node)) originals.set(node, source);
-            node.nodeValue = language === 'bn' ? translatedText(source) : source;
+            node.nodeValue = translatedText(source, language);
         }
-        document.querySelectorAll('[placeholder], [title], [aria-label]').forEach(function (element) {
-            ['placeholder', 'title', 'aria-label'].forEach(function (attribute) {
+        document.querySelectorAll('[placeholder], [title], [aria-label], [alt], input[value], button[value]').forEach(function (element) {
+            ['placeholder', 'title', 'aria-label', 'alt', 'value'].forEach(function (attribute) {
                 var value = element.getAttribute(attribute);
                 if (!value) return;
                 var key = 'orig' + attribute.replace(/-/g, '').charAt(0).toUpperCase() + attribute.replace(/-/g, '').slice(1);
                 if (!element.dataset[key]) element.dataset[key] = value;
-                element.setAttribute(attribute, language === 'bn' ? translatedText(element.dataset[key]).trim() : element.dataset[key]);
+                element.setAttribute(attribute, translatedText(element.dataset[key], language).trim());
             });
         });
     }
@@ -440,6 +466,7 @@ if (btnLibrary) {
     }
 
     window.switchSiteLanguage = applyLanguage;
+    indexDictionary();
     var savedLanguage = 'en';
     try { savedLanguage = localStorage.getItem('site-language') || 'en'; } catch (error) { /* use defaults */ }
     applyThemeColor(THEME_COLOR);
@@ -451,7 +478,8 @@ if (btnLibrary) {
         .then(function (response) { return response.json(); })
         .then(function (data) {
             externalDictionary = data || {};
-            if (document.documentElement.lang === 'bn') applyLanguage('bn');
+            indexDictionary();
+            applyLanguage(document.documentElement.lang === 'bn' ? 'bn' : 'en');
             if (window.SiteBoot) window.SiteBoot.done('lang');
         })
         .catch(function () { if (window.SiteBoot) window.SiteBoot.done('lang'); });
