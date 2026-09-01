@@ -90,6 +90,10 @@
         if (settings.theme) {
             out.push(':root{--theme-primary:' + settings.theme + ';--bs-primary:' + settings.theme + ';}');
         }
+        /* Page loader always follows the theme colour. */
+        out.push('#spinner .spinner-grow,#spinner .spinner-border,#spinner .text-primary{color:var(--theme-primary) !important;background-color:currentColor;}');
+        out.push('#spinner .spinner-border{background-color:transparent !important;border-color:currentColor;border-right-color:transparent;}');
+
         /* Never let a custom font replace icon glyphs. */
         out.push('.fa,.fas,.far,.fal,.fad,[class*="fa-"]:not(.fab){font-family:"Font Awesome 6 Free","Font Awesome 5 Free" !important;}');
         out.push('.fab,[class*="fa-"].fab{font-family:"Font Awesome 6 Brands","Font Awesome 5 Brands" !important;}');
