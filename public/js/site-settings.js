@@ -88,8 +88,33 @@
                 ',.lang-bn{font-family:var(--site-font-bn) !important;}');
         }
         if (settings.theme) {
-            out.push(':root{--theme-primary:' + settings.theme + ';--bs-primary:' + settings.theme + ';}');
+            var rgb = hexToRgb(settings.theme);
+            var hsl = rgb ? rgbToHsl(rgb) : null;
+            var dark = hsl ? rgbToHex(hslToRgb(hsl[0], hsl[1], Math.max(0.12, hsl[2] - 0.1))) : settings.theme;
+            var light = hsl ? rgbToHex(hslToRgb(hsl[0], hsl[1], Math.min(0.94, hsl[2] + 0.12))) : settings.theme;
+            out.push(':root{--theme-primary:' + settings.theme + ';--bs-primary:' + settings.theme +
+                ';--theme-primary-dark:' + dark + ';--theme-primary-light:' + light + ';}');
+
+            /* Hover / focus / active states always follow the theme colour. */
+            out.push([
+                'a:hover,a:focus,a.text-primary:hover,.text-primary:hover{color:var(--theme-primary-dark) !important;}',
+                '.btn-primary,.bg-primary{background-color:var(--theme-primary) !important;border-color:var(--theme-primary) !important;}',
+                '.btn-primary:hover,.btn-primary:focus,.btn-primary:active,.btn-primary.active,.btn-check:checked+.btn-primary',
+                '{background-color:var(--theme-primary-dark) !important;border-color:var(--theme-primary-dark) !important;color:#fff !important;}',
+                '.btn-outline-primary{color:var(--theme-primary) !important;border-color:var(--theme-primary) !important;}',
+                '.btn-outline-primary:hover,.btn-outline-primary:focus,.btn-outline-primary:active',
+                '{background-color:var(--theme-primary) !important;border-color:var(--theme-primary) !important;color:#fff !important;}',
+                '.btn-primary:focus,.btn-outline-primary:focus,.form-control:focus,.form-select:focus',
+                '{box-shadow:0 0 0 .2rem color-mix(in srgb, var(--theme-primary) 30%, transparent) !important;}',
+                '.form-control:focus,.form-select:focus{border-color:var(--theme-primary) !important;}',
+                '.navbar-light .navbar-nav .nav-link:hover,.navbar-light .navbar-nav .nav-link.active{color:var(--theme-primary) !important;}',
+                '.dropdown-item:hover,.dropdown-item:focus,.dropdown-item.active{background-color:var(--theme-primary) !important;color:#fff !important;}',
+                '.page-link{color:var(--theme-primary) !important;}',
+                '.page-item.active .page-link,.page-link:hover{background-color:var(--theme-primary) !important;border-color:var(--theme-primary) !important;color:#fff !important;}',
+                '.back-to-top:hover,.btn-square:hover,.btn-lg-square:hover{background-color:var(--theme-primary-dark) !important;border-color:var(--theme-primary-dark) !important;}'
+            ].join(''));
         }
+
         /* Page loader always follows the theme colour. */
         out.push('#spinner .spinner-grow,#spinner .spinner-border,#spinner .text-primary{color:var(--theme-primary) !important;background-color:currentColor;}');
         out.push('#spinner .spinner-border{background-color:transparent !important;border-color:currentColor;border-right-color:transparent;}');
@@ -256,6 +281,28 @@
         try { recolorInline(map); } catch (e) { /* ignore */ }
     }
 
+    /* Stylesheets can still be loading and carousels/animations clone nodes
+       after the first pass, so repeat it briefly — this is what makes a newly
+       picked colour show up everywhere straight away instead of after reload. */
+    function recolorRepeatedly(theme) {
+        recolor(theme);
+        if (window.requestAnimationFrame) window.requestAnimationFrame(function () { recolor(theme); });
+        [60, 250, 700, 1600].forEach(function (delay) {
+            setTimeout(function () { recolor(current.theme); }, delay);
+        });
+    }
+
+    /* Keep newly inserted markup / stylesheets in the theme colour too. */
+    var observerTimer = null;
+    function watchDom() {
+        if (!window.MutationObserver || watchDom.on) return;
+        watchDom.on = true;
+        new MutationObserver(function () {
+            if (observerTimer) return;
+            observerTimer = setTimeout(function () { observerTimer = null; recolor(current.theme); }, 120);
+        }).observe(document.documentElement, { childList: true, subtree: true, attributeFilter: ['style'] });
+    }
+
     function apply(settings) {
         current = Object.assign({}, DEFAULTS, settings || {});
         styleTag().textContent = css(current);
@@ -266,9 +313,11 @@
             document.documentElement.style.removeProperty('--theme-primary');
             document.documentElement.style.removeProperty('--bs-primary');
         }
-        recolor(current.theme);
         window.SiteSettings.current = current;
+        recolorRepeatedly(current.theme);
+        watchDom();
     }
+
 
 
     var current = Object.assign({}, DEFAULTS);
