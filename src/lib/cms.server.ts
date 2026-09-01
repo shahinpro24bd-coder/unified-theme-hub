@@ -35,7 +35,7 @@ export function isAuthed(request: Request): boolean {
 
 export function credentialsMatch(username: string, password: string): boolean {
   const expectedUser = (process.env['CMS_ADMIN_USER'] ?? '').trim() || 'deselim-admin';
-  const expectedPass = (process.env['CMS_ADMIN_PASSWORD'] ?? '').trim() || 'admin123';
+  const expectedPass = (process.env['CMS_ADMIN_PASSWORD'] ?? '').trim() || 'admin12345';
   const digest = (value: string) => createHash('sha256').update(value, 'utf8').digest();
   const okUser = timingSafeEqual(digest(username), digest(expectedUser));
   const okPass = timingSafeEqual(digest(password), digest(expectedPass));
