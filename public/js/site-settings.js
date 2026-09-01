@@ -147,12 +147,20 @@
         }).join('');
     }
 
-    /* Keeps the original tone (lightness) but adopts the theme hue/saturation. */
+    /* Every solid brand colour becomes EXACTLY the chosen theme colour, so
+       buttons, navbar, gradients and icons never mix different tones.
+       Only the very light wash backgrounds keep their lightness (otherwise the
+       dark body text on them would be unreadable) and adopt the theme hue. */
     function retint(originalRgb, themeHsl) {
         var o = rgbToHsl(originalRgb);
-        var sat = o[1] < 0.08 ? o[1] : Math.max(0.12, Math.min(themeHsl[1], o[1] + (themeHsl[1] - 0.5) * 0.3 + 0.25));
-        return hslToRgb(themeHsl[0], sat, o[2]);
+        if (o[2] >= 0.82) {
+            /* light wash: same tone, theme hue */
+            return hslToRgb(themeHsl[0], Math.max(0.15, Math.min(0.4, themeHsl[1])), o[2]);
+        }
+        /* everything else: the exact theme colour */
+        return hslToRgb(themeHsl[0], themeHsl[1], themeHsl[2]);
     }
+
 
     function buildMap(theme) {
         var base = hexToRgb(theme);
