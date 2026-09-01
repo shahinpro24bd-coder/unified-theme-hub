@@ -388,7 +388,7 @@ if (btnLibrary) {
     var reverseDictionary = {};
 
     function normalizeText(value) {
-        return String(value || '').replace(/\s+/g, ' ').trim();
+        return String(value || '').replace(/\s+/g, ' ').trim().toLocaleLowerCase('en');
     }
 
     function indexDictionary() {
