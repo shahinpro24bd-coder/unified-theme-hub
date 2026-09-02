@@ -1666,3 +1666,207 @@
 }
 
 .chamber-info p i { left: 14px; top: 16px; }
+
+/* ================= MICS Hero ================= */
+.mics-hero {
+    position: relative;
+    overflow: hidden;
+    background: #fff;
+    border-bottom: 4px solid var(--bs-primary);
+}
+.mics-hero__inner {
+    position: relative;
+    display: grid;
+    grid-template-columns: 0.85fr 1.3fr 0.85fr;
+    align-items: end;
+    gap: 0;
+    min-height: 460px;
+}
+.mics-hero__photo,
+.mics-hero__art {
+    position: relative;
+    align-self: stretch;
+    min-height: 260px;
+}
+.mics-hero__photo img,
+.mics-hero__art img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+}
+.mics-hero__photo::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, color-mix(in srgb, var(--bs-primary) 22%, transparent) 0%, rgba(255,255,255,0.15) 45%, #fff 100%);
+    pointer-events: none;
+}
+.mics-hero__art::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(270deg, rgba(255,255,255,0) 40%, #fff 100%);
+    pointer-events: none;
+}
+.mics-hero__art {
+    background: #fff;
+}
+.mics-hero__art img { object-fit: contain; object-position: center; }
+.mics-hero__body {
+    text-align: center;
+    padding: 42px 18px 34px;
+    align-self: center;
+    position: relative;
+    z-index: 2;
+}
+.mics-hero__script {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(1.25rem, 2.4vw, 2rem);
+    color: #2f3a3f;
+    margin-bottom: .35rem;
+}
+.mics-hero__script span { color: var(--bs-primary); }
+.mics-hero__title {
+    font-weight: 900;
+    line-height: 1.02;
+    letter-spacing: -0.5px;
+    margin-bottom: .55rem;
+    font-size: clamp(1.9rem, 4.6vw, 3.6rem);
+    text-transform: uppercase;
+}
+.mics-hero__title .l1 { color: var(--bs-primary); display: block; }
+.mics-hero__title .l2 { color: #2b3a41; display: block; }
+.mics-hero__rule {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: .7rem;
+}
+.mics-hero__rule::before,
+.mics-hero__rule::after {
+    content: "";
+    height: 2px;
+    width: clamp(18px, 6vw, 70px);
+    background: color-mix(in srgb, var(--bs-primary) 55%, #d9b26a);
+}
+.mics-hero__rule span {
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--bs-primary) 75%, #7a5a1e);
+    font-size: clamp(.75rem, 1.5vw, 1.05rem);
+}
+.mics-hero__pill {
+    display: inline-block;
+    background: #2b3a41;
+    color: #fff;
+    font-weight: 700;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    padding: 7px 20px;
+    border-radius: 4px;
+    font-size: clamp(.72rem, 1.4vw, 1rem);
+    margin-bottom: .9rem;
+}
+.mics-hero__name {
+    font-weight: 800;
+    color: var(--bs-primary);
+    font-size: clamp(1.15rem, 2.5vw, 2rem);
+    margin-bottom: .25rem;
+}
+.mics-hero__degrees,
+.mics-hero__role {
+    color: #3c4a50;
+    font-size: clamp(.8rem, 1.4vw, 1.05rem);
+    margin-bottom: .15rem;
+}
+.mics-hero__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 1.2rem;
+}
+.mics-hero__ctas .btn {
+    background: var(--bs-primary);
+    border: none;
+    color: #fff;
+    font-weight: 700;
+    letter-spacing: .6px;
+    text-transform: uppercase;
+    padding: 11px 20px;
+    border-radius: 6px;
+    font-size: .82rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    box-shadow: 0 6px 18px color-mix(in srgb, var(--bs-primary) 28%, transparent);
+    transition: transform .18s ease, background .18s ease, box-shadow .18s ease;
+}
+.mics-hero__ctas .btn:hover,
+.mics-hero__ctas .btn:focus {
+    background: color-mix(in srgb, var(--bs-primary) 82%, #000);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px color-mix(in srgb, var(--bs-primary) 38%, transparent);
+}
+.mics-hero__ticker {
+    background: var(--bs-primary);
+    color: #fff;
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 9px 0;
+    border-top: 2px solid color-mix(in srgb, var(--bs-primary) 60%, #d9b26a);
+}
+.mics-hero__ticker ul {
+    display: inline-flex;
+    gap: 34px;
+    list-style: none;
+    margin: 0;
+    padding: 0 17px;
+    animation: micsTicker 26s linear infinite;
+}
+.mics-hero__ticker li {
+    font-size: .74rem;
+    font-weight: 700;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 34px;
+}
+.mics-hero__ticker li::after {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #fff;
+    opacity: .75;
+}
+@keyframes micsTicker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+}
+@media (max-width: 991.98px) {
+    .mics-hero__inner {
+        grid-template-columns: 1fr 1fr;
+        min-height: 0;
+    }
+    .mics-hero__body {
+        grid-column: 1 / -1;
+        grid-row: 1;
+        padding: 32px 16px 8px;
+    }
+    .mics-hero__photo, .mics-hero__art { min-height: 240px; }
+    .mics-hero__photo::after {
+        background: linear-gradient(90deg, color-mix(in srgb, var(--bs-primary) 18%, transparent), rgba(255,255,255,0));
+    }
+    .mics-hero__art::after { background: none; }
+}
+@media (max-width: 575.98px) {
+    .mics-hero__photo, .mics-hero__art { min-height: 190px; }
+    .mics-hero__ctas .btn { flex: 1 1 100%; justify-content: center; }
+}
