@@ -1677,7 +1677,7 @@
 .mics-hero__inner {
     position: relative;
     display: grid;
-    grid-template-columns: 0.85fr 1.3fr 0.85fr;
+    grid-template-columns: 0.75fr 2fr 1fr;
     align-items: end;
     gap: 0;
     min-height: 460px;
@@ -1713,7 +1713,7 @@
 .mics-hero__art {
     background: #fff;
 }
-.mics-hero__art img { object-fit: contain; object-position: center; }
+.mics-hero__art img { object-fit: cover; object-position: center; }
 .mics-hero__body {
     text-align: center;
     padding: 42px 18px 34px;
@@ -1733,7 +1733,7 @@
     line-height: 1.02;
     letter-spacing: -0.5px;
     margin-bottom: .55rem;
-    font-size: clamp(1.9rem, 4.6vw, 3.6rem);
+    font-size: clamp(1.8rem, 3.4vw, 3.1rem);
     text-transform: uppercase;
 }
 .mics-hero__title .l1 { color: var(--bs-primary); display: block; }
