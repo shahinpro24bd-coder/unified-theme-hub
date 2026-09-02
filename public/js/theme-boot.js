@@ -10,25 +10,6 @@
     var root = document.documentElement;
     var settings = {};
 
-    /* The home-page hero was retired. Keep it out even if an old browser cache,
-       CMS payload, or third-party script attempts to restore its former markup. */
-    var retiredHeroSelector = '.hero1,.hero-header,.header-carousel,#hero,#hero-section,[data-section="hero"]';
-    function removeRetiredHero(scope) {
-        var rootNode = scope && scope.querySelectorAll ? scope : document;
-        var heroes = rootNode.querySelectorAll(retiredHeroSelector);
-        for (var i = 0; i < heroes.length; i++) heroes[i].remove();
-        if (scope && scope.matches && scope.matches(retiredHeroSelector)) scope.remove();
-    }
-    new MutationObserver(function (mutations) {
-        for (var i = 0; i < mutations.length; i++) {
-            for (var j = 0; j < mutations[i].addedNodes.length; j++) {
-                var node = mutations[i].addedNodes[j];
-                if (node.nodeType === 1) removeRetiredHero(node);
-            }
-        }
-    }).observe(document.documentElement, { childList: true, subtree: true });
-    document.addEventListener('DOMContentLoaded', function () { removeRetiredHero(document); });
-
     try { settings = JSON.parse(window.localStorage.getItem(SETTINGS_CACHE) || '{}') || {}; } catch (e) { settings = {}; }
 
     /* ---- theme colour baseline (before any stylesheet paints) ---- */
