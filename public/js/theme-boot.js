@@ -10,24 +10,6 @@
     var root = document.documentElement;
     var settings = {};
 
-    /* Keep the retired home-page hero removed, including markup restored by
-       an old CMS payload or a cached third-party script. */
-    var retiredHeroSelector = '.hero1,.hero-header,.header-carousel,#hero,#hero-section,[data-section="hero"]';
-    function removeRetiredHero(scope) {
-        var rootNode = scope && scope.querySelectorAll ? scope : document;
-        var heroes = rootNode.querySelectorAll(retiredHeroSelector);
-        for (var i = 0; i < heroes.length; i++) heroes[i].remove();
-        if (scope && scope.matches && scope.matches(retiredHeroSelector)) scope.remove();
-    }
-    new MutationObserver(function (mutations) {
-        for (var i = 0; i < mutations.length; i++) {
-            for (var j = 0; j < mutations[i].addedNodes.length; j++) {
-                var node = mutations[i].addedNodes[j];
-                if (node.nodeType === 1) removeRetiredHero(node);
-            }
-        }
-    }).observe(document.documentElement, { childList: true, subtree: true });
-    document.addEventListener('DOMContentLoaded', function () { removeRetiredHero(document); });
 
     try { settings = JSON.parse(window.localStorage.getItem(SETTINGS_CACHE) || '{}') || {}; } catch (e) { settings = {}; }
 
